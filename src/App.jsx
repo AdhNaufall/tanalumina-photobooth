@@ -393,7 +393,17 @@ function App() {
 
   async function handleSaveStrip() {
     const canvas = await renderStripToCanvas(currentTemplate, activeImages, customColor, selectedFrameId, null, photoFilter);
-    downloadCanvas(canvas, `tanalumina-${selectedTemplateId}-${Date.now()}.png`);
+    
+    let identifier = selectedTemplateId;
+    if (selectedFrameId !== 'color') {
+      const frameObj = frames.find((f) => f.id === selectedFrameId);
+      if (frameObj) {
+        // Use the frame's ID (which matches the filename, e.g., 'CHIIKAWA')
+        identifier = frameObj.id.toUpperCase();
+      }
+    }
+
+    downloadCanvas(canvas, `tanalumina-${identifier}.png`);
   }
 
   function resetAllState() {
