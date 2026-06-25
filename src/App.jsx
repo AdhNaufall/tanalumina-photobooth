@@ -920,9 +920,6 @@ function App() {
                 </p>
                 <p className="result-meta">{activeImages.length} foto · {formatDate(new Date())}</p>
                 <div className="result-actions">
-                  <button className="secondary-button" type="button" onClick={() => setStepState(3)}>
-                    Ganti strip
-                  </button>
                   <button className="primary-button" type="button" onClick={handleSaveStrip}>
                     Simpan Strip
                   </button>
