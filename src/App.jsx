@@ -422,9 +422,7 @@ function App() {
   }
 
   function handleShowResult() {
-    if (activeImages.length >= 3) {
-      setStepState(5);
-    }
+    // Deprecated, no longer used
   }
 
   function handleSelectFrame(frameId) {
@@ -442,11 +440,6 @@ function App() {
   }
 
   function handleBack() {
-    if (step === 5) {
-      setStepState(4);
-      return;
-    }
-
     if (step === 4) {
       setStepState(3);
       return;
@@ -566,13 +559,11 @@ function App() {
           </div>
         </section>
 
-        {/* Step progress bar */}
-        <div className="step-progress-bar" aria-hidden="true">
+        <div className="step-progress-bar" aria-hidden="true" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
           <div className={`step-progress-segment ${step >= 1 ? 'done' : ''}`} />
           <div className={`step-progress-segment ${step >= 2 ? 'done' : ''}`} />
           <div className={`step-progress-segment ${step >= 3 ? 'done' : ''}`} />
           <div className={`step-progress-segment ${step >= 4 ? 'done' : ''}`} />
-          <div className={`step-progress-segment ${step >= 5 ? 'done' : ''}`} />
         </div>
 
         {step === 1 ? (
@@ -889,37 +880,7 @@ function App() {
                   </div>
                 </div>
 
-                <div className="customizer-actions">
-                  <button className="primary-button" type="button" onClick={handleShowResult}>
-                    Lihat Hasil Strip →
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-        ) : null}
-
-        {step === 5 ? (
-          <section className="step-panel active">
-            <p className="step-kicker">Hasil strip fotomu</p>
-            <div className="result-layout">
-              <div className="result-preview-card">
-                <StripCanvasPreview
-                  images={activeImages}
-                  template={currentTemplate}
-                  customColor={customColor}
-                  selectedFrameId={selectedFrameId}
-                  photoFilter={photoFilter}
-                />
-              </div>
-              <div className="result-info">
-                <p className="result-title">
-                  {selectedFrameId !== 'color'
-                    ? frames.find((f) => f.id === selectedFrameId)?.name
-                    : currentTemplate.name}
-                </p>
-                <p className="result-meta">{activeImages.length} foto · {formatDate(new Date())}</p>
-                <div className="result-actions">
+                <div className="customizer-actions result-actions">
                   <button className="primary-button" type="button" onClick={handleSaveStrip}>
                     Simpan Strip
                   </button>
@@ -931,6 +892,7 @@ function App() {
             </div>
           </section>
         ) : null}
+
       </main>
 
       <input
