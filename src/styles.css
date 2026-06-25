@@ -895,6 +895,7 @@ button { cursor: pointer; outline: none; }
   display: flex;
   flex-direction: column;
   gap: 14px;
+  min-width: 0;
 }
 .control-group {
   display: flex;
@@ -905,6 +906,7 @@ button { cursor: pointer; outline: none; }
   border: var(--border-thin);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
+  min-width: 0;
 }
 .control-label {
   font-size: 0.8rem;
