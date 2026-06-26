@@ -1,25 +1,29 @@
 # Tanalumina Photobooth
 
-Photobooth personal berbasis React dengan alur 5 halaman:
+Photobooth personal interaktif berbasis React dengan desain modern dan responsif. Memiliki alur penggunaan yang mulus dari pemilihan template hingga hasil cetak foto.
 
-1. Pilih template strip
-2. Pilih metode input
-3. Kamera dengan countdown dan flash
-4. Upload foto dengan drag & drop
-5. Hasil strip dengan simpan dan buat ulang
+## ✨ Fitur Utama
 
-## Menjalankan
+Aplikasi ini memiliki 5 alur halaman yang saling terintegrasi:
 
-Jalankan server statis lokal dari folder project:
+1. 🎞️ **Pilih Template Strip:** Berbagai variasi grid dan layout (Classic 4, Trio, Duo, Grid 2×2, Featured, dan Film Roll).
+2. 📥 **Pilih Metode Input:** Dukungan untuk pengambilan foto langsung maupun unggah foto.
+3. 📸 **Kamera dengan Countdown:** Pengambilan gambar langsung menggunakan webcam dengan fitur hitung mundur dan efek flash.
+4. 📤 **Upload Foto (Drag & Drop):** Alternatif bagi perangkat tanpa kamera atau untuk foto dari galeri.
+5. 🖼️ **Hasil Strip:** Generate hasil akhir berupa strip foto yang siap diunduh (PNG) atau simpan, serta opsi untuk membuat ulang.
+
+## 🚀 Menjalankan Secara Lokal
+
+Untuk menjalankan aplikasi ini secara lokal, Anda dapat menggunakan server statis. Jalankan perintah berikut dari folder root project:
 
 ```bash
 python -m http.server 5173
 ```
 
-Lalu buka `http://localhost:5173`.
+Setelah server berjalan, buka browser Anda dan kunjungi:
+👉 `http://localhost:5173`
 
-## Catatan
+## 📝 Catatan Penting
 
-- Template yang tersedia: Classic 4, Trio, Duo, Grid 2×2, Featured, dan Film Roll.
-- Strip hasil bisa diunduh sebagai PNG.
-- Jika kamera tidak diizinkan, alur tetap bisa dilanjutkan lewat upload.
+- **Unduhan Mudah:** Strip hasil akhir dapat diunduh langsung dalam format `.png`.
+- **Aksesibilitas:** Jika akses kamera diblokir atau tidak tersedia, pengguna tetap bisa melanjutkan alur melalui fitur unggah foto manual.
