@@ -428,3 +428,70 @@ export function downloadCanvas(canvas, filename) {
     }, 1500);
   }, 'image/png');
 }
+
+export async function generateStopMotionGIF(images, photoFilter = 'normal') {
+  return new Promise(async (resolve, reject) => {
+    if (!window.gifshot) {
+      return reject(new Error('gifshot is not loaded'));
+    }
+
+    const filterString = getCanvasFilterString(photoFilter);
+    const framesData = [];
+
+    const gifWidth = 600;
+    const gifHeight = 800; // Portrait standard
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = gifWidth;
+    canvas.height = gifHeight;
+    const ctx = canvas.getContext('2d');
+
+    for (const src of images) {
+      if (!src) continue;
+      try {
+        const img = await loadImage(src);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        drawCoverImageRect(ctx, img, 0, 0, canvas.width, canvas.height, 1, filterString);
+        
+        // Watermark
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.textAlign = 'right';
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 4;
+        ctx.fillText('TANALUMINA', canvas.width - 16, canvas.height - 16);
+        ctx.shadowBlur = 0; // reset
+        
+        framesData.push(canvas.toDataURL('image/jpeg', 0.8));
+      } catch (e) {
+        console.error('Failed to process image for GIF', e);
+      }
+    }
+
+    window.gifshot.createGIF({
+      images: framesData,
+      gifWidth: gifWidth,
+      gifHeight: gifHeight,
+      interval: 0.5,
+    }, (obj) => {
+      if (!obj.error) {
+        resolve(obj.image);
+      } else {
+        reject(obj.error);
+      }
+    });
+  });
+}
+
+export function downloadGIF(dataUrl, filename) {
+  const anchor = document.createElement('a');
+  anchor.href = dataUrl;
+  anchor.download = filename;
+  anchor.style.display = 'none';
+  document.body.appendChild(anchor);
+  anchor.click();
+  window.setTimeout(() => {
+    anchor.remove();
+  }, 1000);
+}

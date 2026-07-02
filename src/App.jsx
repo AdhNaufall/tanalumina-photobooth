@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { templates, frames, initialTemplateId } from './data/templates';
-import { renderStripToCanvas, downloadCanvas, captureVideoFrame, delay } from './utils/canvas';
+import { renderStripToCanvas, downloadCanvas, captureVideoFrame, delay, generateStopMotionGIF, downloadGIF } from './utils/canvas';
 import StripPreview from './components/StripPreview';
 import StripCanvasPreview from './components/StripCanvasPreview';
 import { formatDate } from './utils/canvas';
@@ -23,6 +23,7 @@ function App() {
   const [flashActive, setFlashActive] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [cameraSessionId, setCameraSessionId] = useState(0);
+  const [isGeneratingGIF, setIsGeneratingGIF] = useState(false);
   const uploadingSlotIndexRef = useRef(null);
 
   const videoRef = useRef(null);
@@ -404,6 +405,25 @@ function App() {
     }
 
     downloadCanvas(canvas, `tanalumina-${identifier}.png`);
+  }
+
+  async function handleDownloadGIF() {
+    if (isGeneratingGIF) return;
+    setIsGeneratingGIF(true);
+    try {
+      const dataUrl = await generateStopMotionGIF(activeImages, photoFilter);
+      let identifier = selectedTemplateId;
+      if (selectedFrameId !== 'color') {
+        const frameObj = frames.find((f) => f.id === selectedFrameId);
+        if (frameObj) identifier = frameObj.id.toUpperCase();
+      }
+      downloadGIF(dataUrl, `tanalumina-${identifier}.gif`);
+    } catch (e) {
+      console.error('Failed to generate GIF', e);
+      alert('Gagal membuat GIF. Pastikan proses loading selesai.');
+    } finally {
+      setIsGeneratingGIF(false);
+    }
   }
 
   function resetAllState() {
@@ -890,11 +910,14 @@ function App() {
                   </div>
                 </div>
 
-                <div className="customizer-actions result-actions">
+                <div className="customizer-actions result-actions" style={{ gridTemplateColumns: '1fr 1fr' }}>
                   <button className="primary-button" type="button" onClick={handleSaveStrip}>
                     Simpan Strip
                   </button>
-                  <button className="secondary-button" type="button" onClick={handleRemake}>
+                  <button className="primary-button" style={{ background: 'var(--color-warning)' }} type="button" onClick={handleDownloadGIF} disabled={isGeneratingGIF}>
+                    {isGeneratingGIF ? 'Memproses...' : 'Download GIF 🎞️'}
+                  </button>
+                  <button className="secondary-button" style={{ gridColumn: '1 / -1' }} type="button" onClick={handleRemake}>
                     Buat ulang
                   </button>
                 </div>
