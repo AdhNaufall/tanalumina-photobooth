@@ -419,24 +419,31 @@ function enforce1080x1920(sourceCanvas, bgColor) {
     return sourceCanvas;
   }
 
-  const finalCanvas = document.createElement('canvas');
-  finalCanvas.width = targetWidth;
-  finalCanvas.height = targetHeight;
-  const ctx = finalCanvas.getContext('2d');
+  // Create a temporary canvas to hold the original drawing
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = sourceCanvas.width;
+  tempCanvas.height = sourceCanvas.height;
+  const tempCtx = tempCanvas.getContext('2d');
+  tempCtx.drawImage(sourceCanvas, 0, 0);
+
+  // Resize the original sourceCanvas in-place
+  sourceCanvas.width = targetWidth;
+  sourceCanvas.height = targetHeight;
+  const ctx = sourceCanvas.getContext('2d');
 
   // Fill background
   ctx.fillStyle = bgColor || '#ffffff';
   ctx.fillRect(0, 0, targetWidth, targetHeight);
 
   // Scale to fit (contain)
-  const scale = Math.min(targetWidth / sourceCanvas.width, targetHeight / sourceCanvas.height);
-  const dw = sourceCanvas.width * scale;
-  const dh = sourceCanvas.height * scale;
+  const scale = Math.min(targetWidth / tempCanvas.width, targetHeight / tempCanvas.height);
+  const dw = tempCanvas.width * scale;
+  const dh = tempCanvas.height * scale;
   const dx = (targetWidth - dw) / 2;
   const dy = (targetHeight - dh) / 2;
 
-  ctx.drawImage(sourceCanvas, dx, dy, dw, dh);
-  return finalCanvas;
+  ctx.drawImage(tempCanvas, dx, dy, dw, dh);
+  return sourceCanvas;
 }
 
 export function downloadCanvas(canvas, filename) {
