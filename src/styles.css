@@ -403,19 +403,29 @@ button {
 .step-panel {
   display: flex;
   flex-direction: column;
-  animation: panelIn 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: panelIn 450ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: center top;
 }
 
 @keyframes panelIn {
-  from {
+  0% {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(20px) scale(0.97);
   }
-
-  to {
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
+}
+
+/* ── Smooth Fade Animation ───────────────────────────── */
+.fade-in {
+  animation: fadeIn 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 /* Step kicker (subtitle underneath header) */
@@ -973,7 +983,7 @@ button {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.1s;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
 }
 
 .shutter-btn:hover:not(:disabled) {
