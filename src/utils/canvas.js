@@ -333,7 +333,8 @@ export async function renderStripToCanvas(template, images, customColor, selecte
     // Draw the frame overlay on top
     context.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
 
-    return canvas;
+    // Post-process to ensure 1080x1920
+    return enforce1080x1920(canvas, customColor || frameObj.defaultColor || '#ffffff');
   }
 
   const isPlainColorFrame = selectedFrameId === 'color' && !template.id;
@@ -406,7 +407,36 @@ export async function renderStripToCanvas(template, images, customColor, selecte
   context.textAlign = 'right';
   context.fillText('TANALUMINA Photo Booth', canvas.width - padding, canvas.height - padding + 4);
 
-  return canvas;
+  return enforce1080x1920(canvas, finalBgColor);
+}
+
+function enforce1080x1920(sourceCanvas, bgColor) {
+  const targetWidth = 1080;
+  const targetHeight = 1920;
+  
+  // If already exactly 1080x1920, return as is
+  if (sourceCanvas.width === targetWidth && sourceCanvas.height === targetHeight) {
+    return sourceCanvas;
+  }
+
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = targetWidth;
+  finalCanvas.height = targetHeight;
+  const ctx = finalCanvas.getContext('2d');
+
+  // Fill background
+  ctx.fillStyle = bgColor || '#ffffff';
+  ctx.fillRect(0, 0, targetWidth, targetHeight);
+
+  // Scale to fit (contain)
+  const scale = Math.min(targetWidth / sourceCanvas.width, targetHeight / sourceCanvas.height);
+  const dw = sourceCanvas.width * scale;
+  const dh = sourceCanvas.height * scale;
+  const dx = (targetWidth - dw) / 2;
+  const dy = (targetHeight - dh) / 2;
+
+  ctx.drawImage(sourceCanvas, dx, dy, dw, dh);
+  return finalCanvas;
 }
 
 export function downloadCanvas(canvas, filename) {
